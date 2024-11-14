@@ -12,6 +12,7 @@ fun download(url: String): ConfigurableFileCollection {
         file.parentFile.mkdirs()
         file.writeBytes(uri(url).toURL().readBytes())
         println("Downloaded $url into $file")
+        println("First 500 chars of the file: ${file.readText().take(500)}")
     }
     return files(file)
 }
