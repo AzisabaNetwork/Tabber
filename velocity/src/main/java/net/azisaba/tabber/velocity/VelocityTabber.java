@@ -6,6 +6,7 @@ import net.azisaba.tabber.api.TabberConfig;
 import net.azisaba.tabber.api.actor.TabberPlayer;
 import net.azisaba.tabber.api.impl.TabberConfigImpl;
 import net.azisaba.tabber.velocity.actor.VelocityTabberPlayer;
+import net.azisaba.tabber.velocity.command.VelocityCommandManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;

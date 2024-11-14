@@ -1,7 +1,8 @@
-package net.azisaba.tabber.velocity;
+package net.azisaba.tabber.velocity.command;
 
-import net.azisaba.tabber.api.CommandManager;
+import net.azisaba.tabber.api.command.CommandManager;
 import net.azisaba.tabber.api.command.Command;
+import net.azisaba.tabber.velocity.VelocityTabber;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 

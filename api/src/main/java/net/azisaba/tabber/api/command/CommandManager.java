@@ -1,6 +1,5 @@
-package net.azisaba.tabber.api;
+package net.azisaba.tabber.api.command;
 
-import net.azisaba.tabber.api.command.Command;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
