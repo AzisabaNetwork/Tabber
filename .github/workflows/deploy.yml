@@ -31,4 +31,4 @@ jobs:
           mkdir velocity/libs
           wget https://github.com/NEZNAMY/TAB/releases/download/5.0.1/TAB.v5.0.1.jar -O velocity/libs/TAB.v5.0.1.jar
       - name: Deploy
-        run: ./gradlew clean test publish
+        run: ./gradlew test api:publish
