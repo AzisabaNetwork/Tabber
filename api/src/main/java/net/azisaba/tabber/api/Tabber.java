@@ -2,6 +2,7 @@ package net.azisaba.tabber.api;
 
 import net.azisaba.tabber.api.actor.TabberPlayer;
 import net.azisaba.tabber.api.command.CommandManager;
+import net.azisaba.tabber.api.command.impl.DebugCommand;
 import net.azisaba.tabber.api.command.impl.HelpCommand;
 import net.azisaba.tabber.api.command.impl.ReloadCommand;
 import net.azisaba.tabber.api.command.impl.VersionCommand;
@@ -71,6 +72,7 @@ public interface Tabber {
         getCommandManager().registerCommand(new VersionCommand());
         getCommandManager().registerCommand(new HelpCommand());
         getCommandManager().registerCommand(new ReloadCommand());
+        getCommandManager().registerCommand(new DebugCommand());
     }
 
     /**

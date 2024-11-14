@@ -4,6 +4,8 @@ import com.velocitypowered.api.proxy.Player;
 import me.neznamy.tab.shared.TAB;
 import me.neznamy.tab.shared.platform.TabPlayer;
 import net.azisaba.tabber.api.actor.TabberPlayer;
+import net.azisaba.tabber.api.scoreboard.Scoreboard;
+import net.azisaba.tabber.velocity.scoreboard.VelocityScoreboard;
 import net.kyori.adventure.audience.ForwardingAudience;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,10 +13,14 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class VelocityTabberPlayer implements TabberPlayer, ForwardingAudience.Single {
-    private final Player player;
+    private final @NotNull Player player;
 
     public VelocityTabberPlayer(@NotNull Player player) {
         this.player = Objects.requireNonNull(player);
+    }
+
+    public @NotNull Player getPlayer() {
+        return player;
     }
 
     @Override
@@ -30,6 +36,11 @@ public class VelocityTabberPlayer implements TabberPlayer, ForwardingAudience.Si
     @Override
     public @NotNull String getUsername() {
         return player.getUsername();
+    }
+
+    @Override
+    public @NotNull Scoreboard getScoreboard() {
+        return new VelocityScoreboard(this);
     }
 
     public @NotNull TabPlayer getTabPlayer() {
