@@ -26,5 +26,9 @@ jobs:
           mkdir -p $HOME/.gradle
           echo "repoUsername=${{ secrets.REPO_USERNAME }}" >> $HOME/.gradle/gradle.properties
           echo "repoPassword=${{ secrets.REPO_PASSWORD }}" >> $HOME/.gradle/gradle.properties
+      - name: Download TAB
+        run: |
+          mkdir velocity/libs
+          wget https://github.com/NEZNAMY/TAB/releases/download/5.0.1/TAB.v5.0.1.jar -O velocity/libs/TAB.v5.0.1.jar
       - name: Deploy
-        run: ./gradlew --info clean test publish
+        run: ./gradlew clean test publish
