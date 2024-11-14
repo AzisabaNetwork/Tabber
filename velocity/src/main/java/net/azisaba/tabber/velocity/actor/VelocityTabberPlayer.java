@@ -1,6 +1,8 @@
 package net.azisaba.tabber.velocity.actor;
 
 import com.velocitypowered.api.proxy.Player;
+import me.neznamy.tab.shared.TAB;
+import me.neznamy.tab.shared.platform.TabPlayer;
 import net.azisaba.tabber.api.actor.TabberPlayer;
 import net.kyori.adventure.audience.ForwardingAudience;
 import org.jetbrains.annotations.NotNull;
@@ -28,5 +30,9 @@ public class VelocityTabberPlayer implements TabberPlayer, ForwardingAudience.Si
     @Override
     public @NotNull String getUsername() {
         return player.getUsername();
+    }
+
+    public @NotNull TabPlayer getTabPlayer() {
+        return Objects.requireNonNull(TAB.getInstance().getPlayer(getUniqueId()), "TabPlayer is null");
     }
 }

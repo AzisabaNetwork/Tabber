@@ -5,8 +5,10 @@ import net.azisaba.tabber.api.command.CommandManager;
 import net.azisaba.tabber.api.command.impl.HelpCommand;
 import net.azisaba.tabber.api.command.impl.ReloadCommand;
 import net.azisaba.tabber.api.command.impl.VersionCommand;
+import net.azisaba.tabber.api.placeholder.PlaceholderManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,6 +38,12 @@ public interface Tabber {
     @NotNull CommandManager getCommandManager();
 
     /**
+     * Returns the placeholder manager which holds the placeholder data.
+     * @return the placeholder manager
+     */
+    @NotNull PlaceholderManager getPlaceholderManager();
+
+    /**
      * Returns the player object by their Minecraft username.
      * @param username the name of the player
      * @return the player object
@@ -48,6 +56,12 @@ public interface Tabber {
      * @return the player object
      */
     @NotNull Optional<@NotNull TabberPlayer> getPlayer(@NotNull UUID uuid);
+
+    /**
+     * Returns the list of online players.
+     * @return the list of online players
+     */
+    @NotNull List<@NotNull TabberPlayer> getOnlinePlayers();
 
     /**
      * Enables the features of the plugin.
