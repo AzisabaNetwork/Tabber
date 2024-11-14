@@ -8,8 +8,10 @@ fun download(url: String): ConfigurableFileCollection {
     val cacheDir = File(project.layout.buildDirectory.asFile.get(), "downloadCache")
     val file = File(cacheDir, "$hashedUrl/$fileName")
     if (!file.exists()) {
+        println("Downloading $url")
         file.parentFile.mkdirs()
         file.writeBytes(uri(url).toURL().readBytes())
+        println("Downloaded $url into $file")
     }
     return files(file)
 }

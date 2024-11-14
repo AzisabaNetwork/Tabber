@@ -18,7 +18,7 @@ public interface Placeholder {
      *
      * @param text   the text to replace
      * @param player the player to get the value
-     * @return
+     * @return the replaced text
      */
     String replace(@NotNull String text, @NotNull TabberPlayer player);
 }
