@@ -30,5 +30,9 @@ jobs:
         run: |
           mkdir velocity/libs
           wget https://github.com/NEZNAMY/TAB/releases/download/5.0.1/TAB.v5.0.1.jar -O velocity/libs/TAB.v5.0.1.jar
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          version: "28.3"
       - name: Deploy
         run: ./gradlew test api:publish
