@@ -1,0 +1,8 @@
+debug: false
+
+server-groups:
+  group1:
+    - server1
+    - server2
+
+order-update-interval: 5000

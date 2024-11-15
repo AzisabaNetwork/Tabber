@@ -12,5 +12,15 @@ public interface TabberConfig {
      */
     boolean isDebug();
 
+    /**
+     * Returns the server groups.
+     * @return the server groups
+     */
     @NotNull Map<@NotNull String, @NotNull List<@NotNull String>> getServerGroups();
+
+    /**
+     * Returns the update interval of the tab list order, in milliseconds.
+     * @return the update interval
+     */
+    int getOrderUpdateInterval();
 }

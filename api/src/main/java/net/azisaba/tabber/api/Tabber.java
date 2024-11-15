@@ -98,6 +98,7 @@ public interface Tabber {
      */
     default void disable() {
         EventBus.INSTANCE.callEvent(new TabberUnloadEvent());
+        getPlatform().cancelTasks();
         getCommandManager().unregisterAllCommands();
         getFunctionManager().unload();
     }

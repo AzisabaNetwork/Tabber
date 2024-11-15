@@ -13,4 +13,9 @@ public interface TabberPlatform {
      * @param player the player who joined
      */
     void onJoin(@NotNull TabberPlayer player);
+
+    /**
+     * Cancels all running tasks.
+     */
+    void cancelTasks();
 }

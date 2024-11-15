@@ -1,11 +1,15 @@
 package net.azisaba.tabber.api.impl;
 
+import net.azisaba.tabber.api.Logger;
 import net.azisaba.tabber.api.TabberConfig;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
@@ -39,9 +43,30 @@ public class TabberConfigImpl implements TabberConfig {
                 }, HashMap::putAll);
     }
 
+    @Override
+    public int getOrderUpdateInterval() {
+        return root.node("order-update-interval").getInt(5000);
+    }
+
     /* static methods */
 
+    private static void saveDefaultConfig(@NotNull Path path) throws IOException {
+        try (InputStream in = TabberConfigImpl.class.getClassLoader().getResourceAsStream("config.yml")) {
+            if (in == null) {
+                throw new IOException("Resource not found: config.yml");
+            }
+            Files.write(path, in.readAllBytes());
+        }
+    }
+
     public static @NotNull TabberConfigImpl createFromYaml(@NotNull Path path) {
+        if (Files.notExists(path)) {
+            try {
+                saveDefaultConfig(path);
+            } catch (IOException e) {
+                Logger.getCurrentLogger().error("Failed to save default config", e);
+            }
+        }
         try {
             return createFromNode(YamlConfigurationLoader.builder().file(path.toFile()).build().load());
         } catch (ConfigurateException e) {
