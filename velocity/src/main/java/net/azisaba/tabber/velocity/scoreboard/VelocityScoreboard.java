@@ -15,7 +15,7 @@ public class VelocityScoreboard implements Scoreboard {
     private final @NotNull ProxyScoreboard scoreboard;
 
     public VelocityScoreboard(VelocityTabberPlayer player) {
-        this.scoreboard = ScoreboardManager.getInstance().getProxyScoreboard(player.getPlayer());
+        this.scoreboard = ScoreboardManager.getInstance().getProxyScoreboard(player.player());
     }
 
     public @NotNull ProxyScoreboard getScoreboard() {

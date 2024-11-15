@@ -2,6 +2,8 @@ package net.azisaba.tabber.velocity;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.connection.PostLoginEvent;
+import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Dependency;
@@ -10,6 +12,7 @@ import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import net.azisaba.tabber.api.Constants;
 import net.azisaba.tabber.api.TabberProvider;
+import net.azisaba.tabber.velocity.actor.VelocityTabberPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -66,5 +69,16 @@ public class VelocityPlugin {
     @Subscribe
     public void onProxyShutdown(@NotNull ProxyShutdownEvent e) {
         TabberProvider.get().disable();
+    }
+
+    @Subscribe
+    public void onPostLogin(@NotNull PostLoginEvent e) {
+        TabberProvider.get().getPlatform().onJoin(new VelocityTabberPlayer(e.getPlayer()));
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    @Subscribe
+    public void onServerPostConnect(@NotNull ServerPostConnectEvent e) {
+        TabberProvider.get().getPlatform().onJoin(new VelocityTabberPlayer(e.getPlayer()));
     }
 }

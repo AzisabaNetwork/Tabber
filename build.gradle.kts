@@ -55,4 +55,10 @@ allprojects {
             }
         }
     }
+
+    tasks {
+        processResources {
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        }
+    }
 }

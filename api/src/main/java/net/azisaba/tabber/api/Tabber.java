@@ -2,10 +2,8 @@ package net.azisaba.tabber.api;
 
 import net.azisaba.tabber.api.actor.TabberPlayer;
 import net.azisaba.tabber.api.command.CommandManager;
-import net.azisaba.tabber.api.command.impl.DebugCommand;
-import net.azisaba.tabber.api.command.impl.HelpCommand;
-import net.azisaba.tabber.api.command.impl.ReloadCommand;
-import net.azisaba.tabber.api.command.impl.VersionCommand;
+import net.azisaba.tabber.api.command.impl.*;
+import net.azisaba.tabber.api.macro.MacroManager;
 import net.azisaba.tabber.api.placeholder.PlaceholderManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,6 +12,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface Tabber {
+    /**
+     * Returns the platform-specific implementation of Tabber.
+     */
+    @NotNull TabberPlatform getPlatform();
+
     /**
      * Reloads the configuration of the plugin.
      */
@@ -45,6 +48,12 @@ public interface Tabber {
     @NotNull PlaceholderManager getPlaceholderManager();
 
     /**
+     * Returns the macro manager which holds the macro data for parsing expressions using cel-java.
+     * @return the macro manager
+     */
+    @NotNull MacroManager getMacroManager();
+
+    /**
      * Returns the player object by their Minecraft username.
      * @param username the name of the player
      * @return the player object
@@ -69,10 +78,15 @@ public interface Tabber {
      */
     default void enable() {
         reloadConfig();
+        getMacroManager().load();
         getCommandManager().registerCommand(new VersionCommand());
         getCommandManager().registerCommand(new HelpCommand());
         getCommandManager().registerCommand(new ReloadCommand());
         getCommandManager().registerCommand(new DebugCommand());
+        getCommandManager().registerCommand(new EvalCommand());
+        for (@NotNull TabberPlayer player : getOnlinePlayers()) {
+            getPlatform().onJoin(player);
+        }
     }
 
     /**
@@ -80,5 +94,6 @@ public interface Tabber {
      */
     default void disable() {
         getCommandManager().unregisterAllCommands();
+        getMacroManager().unload();
     }
 }

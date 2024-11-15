@@ -1,9 +1,10 @@
 package net.azisaba.tabber.velocity;
 
 import net.azisaba.tabber.api.Logger;
-import net.azisaba.tabber.api.Tabber;
 import net.azisaba.tabber.api.TabberConfig;
+import net.azisaba.tabber.api.TabberPlatform;
 import net.azisaba.tabber.api.actor.TabberPlayer;
+import net.azisaba.tabber.api.impl.AbstractTabber;
 import net.azisaba.tabber.api.impl.TabberConfigImpl;
 import net.azisaba.tabber.api.placeholder.PlaceholderManager;
 import net.azisaba.tabber.velocity.actor.VelocityTabberPlayer;
@@ -15,9 +16,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class VelocityTabber implements Tabber {
+public class VelocityTabber extends AbstractTabber {
     private final @NotNull VelocityPlugin plugin;
     private final @NotNull Logger logger;
+    private final @NotNull VelocityPlatform platform = new VelocityPlatform();
     private final @NotNull VelocityCommandManager commandManager = new VelocityCommandManager(this);
     private final @NotNull PlaceholderManager placeholderManager = new PlaceholderManagerImpl();
     private @NotNull TabberConfig config;
@@ -30,6 +32,11 @@ public class VelocityTabber implements Tabber {
 
     public @NotNull VelocityPlugin getPlugin() {
         return plugin;
+    }
+
+    @Override
+    public @NotNull TabberPlatform getPlatform() {
+        return platform;
     }
 
     @Override

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option java_package = "net.azisaba.tabber.message";
+option java_outer_classname = "PlayerMessage";
+option java_multiple_files = true;
+
+message Player {
+  string username = 1;
+  string uuid = 2;
+  optional string server = 3;
+}

@@ -10,17 +10,12 @@ import net.kyori.adventure.audience.ForwardingAudience;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
-public class VelocityTabberPlayer implements TabberPlayer, ForwardingAudience.Single {
-    private final @NotNull Player player;
-
+public record VelocityTabberPlayer(@NotNull Player player) implements TabberPlayer, ForwardingAudience.Single {
     public VelocityTabberPlayer(@NotNull Player player) {
         this.player = Objects.requireNonNull(player);
-    }
-
-    public @NotNull Player getPlayer() {
-        return player;
     }
 
     @Override
@@ -36,6 +31,11 @@ public class VelocityTabberPlayer implements TabberPlayer, ForwardingAudience.Si
     @Override
     public @NotNull String getUsername() {
         return player.getUsername();
+    }
+
+    @Override
+    public @NotNull Optional<@NotNull String> getServerName() {
+        return player.getCurrentServer().map(conn -> conn.getServerInfo().getName());
     }
 
     @Override
