@@ -3,7 +3,10 @@ package net.azisaba.tabber.api;
 import net.azisaba.tabber.api.actor.TabberPlayer;
 import net.azisaba.tabber.api.command.CommandManager;
 import net.azisaba.tabber.api.command.impl.*;
-import net.azisaba.tabber.api.macro.MacroManager;
+import net.azisaba.tabber.api.event.EventBus;
+import net.azisaba.tabber.api.event.TabberLoadEvent;
+import net.azisaba.tabber.api.event.TabberUnloadEvent;
+import net.azisaba.tabber.api.function.FunctionManager;
 import net.azisaba.tabber.api.placeholder.PlaceholderManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,10 +51,10 @@ public interface Tabber {
     @NotNull PlaceholderManager getPlaceholderManager();
 
     /**
-     * Returns the macro manager which holds the macro data for parsing expressions using cel-java.
-     * @return the macro manager
+     * Returns the function manager which holds the function data for evaluating expressions using cel-java.
+     * @return the function manager
      */
-    @NotNull MacroManager getMacroManager();
+    @NotNull FunctionManager getFunctionManager();
 
     /**
      * Returns the player object by their Minecraft username.
@@ -78,7 +81,7 @@ public interface Tabber {
      */
     default void enable() {
         reloadConfig();
-        getMacroManager().load();
+        getFunctionManager().load();
         getCommandManager().registerCommand(new VersionCommand());
         getCommandManager().registerCommand(new HelpCommand());
         getCommandManager().registerCommand(new ReloadCommand());
@@ -87,13 +90,15 @@ public interface Tabber {
         for (@NotNull TabberPlayer player : getOnlinePlayers()) {
             getPlatform().onJoin(player);
         }
+        EventBus.INSTANCE.callEvent(new TabberLoadEvent());
     }
 
     /**
      * Disables the features of the plugin.
      */
     default void disable() {
+        EventBus.INSTANCE.callEvent(new TabberUnloadEvent());
         getCommandManager().unregisterAllCommands();
-        getMacroManager().unload();
+        getFunctionManager().unload();
     }
 }

@@ -1,14 +1,14 @@
 package net.azisaba.tabber.api.impl;
 
 import net.azisaba.tabber.api.Tabber;
-import net.azisaba.tabber.api.impl.macro.MacroManagerImpl;
+import net.azisaba.tabber.api.impl.function.FunctionManagerImpl;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractTabber implements Tabber {
-    protected final MacroManagerImpl macroManager = new MacroManagerImpl();
+    protected final FunctionManagerImpl functionManager = new FunctionManagerImpl();
 
     @Override
-    public @NotNull MacroManagerImpl getMacroManager() {
-        return macroManager;
+    public @NotNull FunctionManagerImpl getFunctionManager() {
+        return functionManager;
     }
 }
