@@ -34,6 +34,14 @@ public interface TabberPlayer extends Audience {
     @NotNull Scoreboard getScoreboard();
 
     /**
+     * Updates the order of the tab list seen by this player.
+     */
+    default void updateOrder() {
+        Scoreboard scoreboard = getScoreboard();
+        // TODO: implement
+    }
+
+    /**
      * Converts the player to a protobuf message object.
      * <p>Note: After converting, the message cannot be converted back to the player object.</p>
      * @return the message object

@@ -10,6 +10,7 @@ import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import me.neznamy.tab.shared.TAB;
 import net.azisaba.tabber.api.Constants;
 import net.azisaba.tabber.api.TabberProvider;
 import net.azisaba.tabber.velocity.actor.VelocityTabberPlayer;
@@ -62,6 +63,9 @@ public class VelocityPlugin {
 
     @Subscribe
     public void onProxyInitialization(@NotNull ProxyInitializeEvent e) {
+        if (TAB.getInstance().getConfiguration().getConfig().getTeams() != null) {
+            throw new RuntimeException("Tabber is not compatible with the scoreboard-teams feature of TAB. Please disable it in the plugins/tab/config.yml.");
+        }
         TabberProvider.get().enable();
         proxyServer.getCommandManager().register(proxyServer.getCommandManager().metaBuilder("tabber").plugin(this).build(), command);
     }

@@ -40,4 +40,9 @@ public class PlaceholderManagerImpl implements PlaceholderManager {
     public @NotNull Optional<@NotNull Placeholder> getPlaceholderByIdentifier(@NotNull String identifier) {
         return Optional.ofNullable(wrap(tabPlaceholderManager.get().getPlaceholderRaw(identifier)));
     }
+
+    @Override
+    public @NotNull List<@NotNull String> detectPlaceholders(@NotNull String text) {
+        return me.neznamy.tab.shared.features.PlaceholderManagerImpl.detectPlaceholders(text);
+    }
 }

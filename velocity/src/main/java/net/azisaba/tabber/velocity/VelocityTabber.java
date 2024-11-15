@@ -19,7 +19,7 @@ import java.util.UUID;
 public class VelocityTabber extends AbstractTabber {
     private final @NotNull VelocityPlugin plugin;
     private final @NotNull Logger logger;
-    private final @NotNull VelocityPlatform platform = new VelocityPlatform();
+    private final @NotNull VelocityPlatform platform = new VelocityPlatform(this);
     private final @NotNull VelocityCommandManager commandManager = new VelocityCommandManager(this);
     private final @NotNull PlaceholderManager placeholderManager = new PlaceholderManagerImpl();
     private @NotNull TabberConfig config;

@@ -44,8 +44,27 @@ public class TabberConfigImpl implements TabberConfig {
     }
 
     @Override
+    public boolean isolateUnlistedServers() {
+        return root.node("isolate-unlisted-servers").getBoolean(false);
+    }
+
+    @Override
     public int getOrderUpdateInterval() {
         return root.node("order-update-interval").getInt(5000);
+    }
+
+    @Override
+    public boolean isOrderViewerServerFirst() {
+        return root.node("order-viewer-server-first").getBoolean(false);
+    }
+
+    @Override
+    public @NotNull List<@NotNull String> getOrder() {
+        return root.node("order")
+                .childrenList()
+                .stream()
+                .map(node -> Objects.requireNonNull(node.getString(), "order contains null"))
+                .collect(Collectors.toList());
     }
 
     /* static methods */

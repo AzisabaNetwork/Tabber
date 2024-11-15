@@ -25,7 +25,6 @@ public class EvalCommand implements Command {
     private final CelCompiler CEL_COMPILER =
             CelCompilerFactory.standardCelCompilerBuilder()
                     .setStandardMacros(CelStandardMacro.values())
-                    .setContainer("google.rpc.context.AttributeContext")
                     .addMessageTypes(PlayerMessage.getDescriptor().getMessageTypes())
                     .addFunctionDeclarations(
                             TabberProvider.get()

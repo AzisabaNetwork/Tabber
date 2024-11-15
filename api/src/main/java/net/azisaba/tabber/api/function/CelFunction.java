@@ -17,7 +17,16 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public final class CelFunction {
-    public static final CelFunction GET_PLACEHOLDER = new CelFunction(
+    public static final CelFunction STRING_REVERSE = new CelFunction(
+            "reverse",
+            OverloadDef.createMemberOverload(
+                    "String_reverse",
+                    String.class,
+                    String.class,
+                    (string) -> new StringBuilder(string).reverse().toString()
+            )
+    );
+    public static final CelFunction PLAYER_GET_PLACEHOLDER = new CelFunction(
             "getPlaceholder",
             OverloadDef.createMemberOverload(
                     "Player_getPlaceholder_string",
@@ -29,6 +38,22 @@ public final class CelFunction {
                         return TabberProvider.get().getPlaceholderManager().getPlaceholderByIdentifier(identifier)
                                 .map(placeholder -> placeholder.replace(identifier, tabberPlayer))
                                 .orElse(identifier);
+                    }
+            )
+    );
+    public static final CelFunction PLAYER_GET_PLACEHOLDER_AS_INT = new CelFunction(
+            "getPlaceholderAsInt",
+            OverloadDef.createMemberOverload(
+                    "Player_getPlaceholderAsInt_string",
+                    int.class,
+                    Player.class,
+                    String.class,
+                    (player, identifier) -> {
+                        TabberPlayer tabberPlayer = TabberProvider.get().getPlayer(UUID.fromString(player.getUuid())).orElseThrow();
+                        return TabberProvider.get().getPlaceholderManager().getPlaceholderByIdentifier(identifier)
+                                .map(placeholder -> placeholder.replace(identifier, tabberPlayer))
+                                .map(Integer::parseInt)
+                                .orElse(0);
                     }
             )
     );

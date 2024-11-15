@@ -21,4 +21,9 @@ public interface PlaceholderManager {
      * @return the placeholder or null if not found
      */
     @NotNull Optional<@NotNull Placeholder> getPlaceholderByIdentifier(@NotNull String identifier);
+
+    /**
+     * Try to detect placeholders in the given text.
+     */
+    @NotNull List<@NotNull String> detectPlaceholders(@NotNull String text);
 }

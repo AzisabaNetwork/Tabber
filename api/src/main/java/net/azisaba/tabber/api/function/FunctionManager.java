@@ -29,7 +29,9 @@ public interface FunctionManager {
      * Registers default functions.
      */
     default void load() {
-        registerFunction(CelFunction.GET_PLACEHOLDER);
+        registerFunction(CelFunction.STRING_REVERSE);
+        registerFunction(CelFunction.PLAYER_GET_PLACEHOLDER);
+        registerFunction(CelFunction.PLAYER_GET_PLACEHOLDER_AS_INT);
     }
 
     /**
