@@ -43,7 +43,7 @@ public class EvalCommand implements Command {
             CelAbstractSyntaxTree ast = OrderData.CEL_COMPILER.get().compile(expression).getAst();
             CelRuntime.Program program = OrderData.CEL_RUNTIME.get().createProgram(ast);
             long executionStart = System.nanoTime();
-            Object result = program.eval(Map.of("player", player.toProtobuf()));
+            Object result = program.eval(Map.of("viewer", player.toProtobuf(), "player", player.toProtobuf()));
             long end = System.nanoTime();
             double timeInMillis = Math.round((end - start) / 1000000.0 * 1000.0) / 1000.0;
             double executionTimeInMillis = Math.round((end - executionStart) / 1000000.0 * 1000.0) / 1000.0;
