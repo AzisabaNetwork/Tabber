@@ -1,27 +1,47 @@
-package net.azisaba.tabber.api.impl;
+package net.azisaba.tabber.api.impl.config;
 
 import net.azisaba.tabber.api.Logger;
-import net.azisaba.tabber.api.TabberConfig;
+import net.azisaba.tabber.api.TabberProvider;
+import net.azisaba.tabber.api.config.TabberConfig;
+import net.azisaba.tabber.api.core.Registry;
+import net.azisaba.tabber.api.order.OrderData;
+import net.azisaba.tabber.api.order.OrderType;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TabberConfigImpl implements TabberConfig {
     private final @NotNull ConfigurationNode root;
+    private final @NotNull List<@NotNull OrderData> order;
 
     private TabberConfigImpl(@NotNull ConfigurationNode root) {
         this.root = Objects.requireNonNull(root);
+        Registry<String, OrderType> orderTypeRegistry = TabberProvider.get().getOrderTypeRegistry();
+        this.order = root.node("order")
+                .childrenList()
+                .stream()
+                .map(node -> {
+                    try {
+                        String typeString = Objects.requireNonNull(node.node("type").getString(), "type").toUpperCase(Locale.ROOT);
+                        OrderType type = orderTypeRegistry.getOrThrow(typeString);
+                        String expression = Objects.requireNonNull(node.node("expression").getString(), "expression");
+                        return OrderData.orderData(type, expression);
+                    } catch (Exception e) {
+                        Logger.getCurrentLogger().error("Failed to parse order data", e);
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     public @NotNull ConfigurationNode getRoot() {
@@ -44,6 +64,15 @@ public class TabberConfigImpl implements TabberConfig {
     }
 
     @Override
+    public @NotNull List<@NotNull String> getSpyServers() {
+        try {
+            return Objects.requireNonNull(root.node("spy-servers").getList(String.class), "spy-servers cannot be null; use empty list instead");
+        } catch (SerializationException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public boolean isolateUnlistedServers() {
         return root.node("isolate-unlisted-servers").getBoolean(false);
     }
@@ -54,17 +83,8 @@ public class TabberConfigImpl implements TabberConfig {
     }
 
     @Override
-    public boolean isOrderViewerServerFirst() {
-        return root.node("order-viewer-server-first").getBoolean(false);
-    }
-
-    @Override
-    public @NotNull List<@NotNull String> getOrder() {
-        return root.node("order")
-                .childrenList()
-                .stream()
-                .map(node -> Objects.requireNonNull(node.getString(), "order contains null"))
-                .collect(Collectors.toList());
+    public @NotNull List<@NotNull OrderData> getOrder() {
+        return order;
     }
 
     /* static methods */

@@ -3,10 +3,15 @@ package net.azisaba.tabber.api;
 import net.azisaba.tabber.api.actor.TabberPlayer;
 import net.azisaba.tabber.api.command.CommandManager;
 import net.azisaba.tabber.api.command.impl.*;
+import net.azisaba.tabber.api.config.TabberConfig;
+import net.azisaba.tabber.api.core.MutableRegistry;
 import net.azisaba.tabber.api.event.EventBus;
 import net.azisaba.tabber.api.event.TabberLoadEvent;
+import net.azisaba.tabber.api.event.TabberPreLoadEvent;
 import net.azisaba.tabber.api.event.TabberUnloadEvent;
 import net.azisaba.tabber.api.function.FunctionManager;
+import net.azisaba.tabber.api.order.OrderData;
+import net.azisaba.tabber.api.order.OrderType;
 import net.azisaba.tabber.api.placeholder.PlaceholderManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,6 +62,12 @@ public interface Tabber {
     @NotNull FunctionManager getFunctionManager();
 
     /**
+     * Returns the order type registry.
+     * @return the order type registry
+     */
+    @NotNull MutableRegistry<String, OrderType> getOrderTypeRegistry();
+
+    /**
      * Returns the player object by their Minecraft username.
      * @param username the name of the player
      * @return the player object
@@ -80,26 +91,52 @@ public interface Tabber {
      * Enables the features of the plugin.
      */
     default void enable() {
-        reloadConfig();
+        Logger.getCurrentLogger().info("Enabling Tabber...");
+        Logger.getCurrentLogger().info("TAB's scoreboard-teams feature is not compatible with Tabber. If you're using TAB, please disable the scoreboard-teams feature.");
+        getOrderTypeRegistry().register("A_TO_Z", OrderType.ASCENDING);
+        getOrderTypeRegistry().register("ASC", OrderType.ASCENDING);
+        getOrderTypeRegistry().register("ASCENDING", OrderType.ASCENDING);
+        getOrderTypeRegistry().register("Z_TO_A", OrderType.DESCENDING);
+        getOrderTypeRegistry().register("DESC", OrderType.DESCENDING);
+        getOrderTypeRegistry().register("DESCENDING", OrderType.DESCENDING);
+        getOrderTypeRegistry().register("LOW_TO_HIGH", OrderType.LOW_TO_HIGH);
+        getOrderTypeRegistry().register("HIGH_TO_LOW", OrderType.HIGH_TO_LOW);
+        EventBus.INSTANCE.callEvent(new TabberPreLoadEvent());
         getFunctionManager().load();
+        reloadConfig();
         getCommandManager().registerCommand(new VersionCommand());
         getCommandManager().registerCommand(new HelpCommand());
         getCommandManager().registerCommand(new ReloadCommand());
         getCommandManager().registerCommand(new DebugCommand());
         getCommandManager().registerCommand(new EvalCommand());
+        getCommandManager().registerCommand(new UnloadCommand());
         for (@NotNull TabberPlayer player : getOnlinePlayers()) {
-            getPlatform().onJoin(player);
+            try {
+                getPlatform().onJoin(player);
+            } catch (Exception e) {
+                Logger.getCurrentLogger().error("Failed to execute onJoin hook for player {}", player.getUsername(), e);
+            }
         }
+        getPlatform().scheduleOrderUpdateTask();
         EventBus.INSTANCE.callEvent(new TabberLoadEvent());
+        Logger.getCurrentLogger().info("Enabled Tabber v" + Constants.VERSION);
     }
 
     /**
      * Disables the features of the plugin.
      */
     default void disable() {
+        Logger.getCurrentLogger().info("Disabling Tabber...");
         EventBus.INSTANCE.callEvent(new TabberUnloadEvent());
         getPlatform().cancelTasks();
+        for (@NotNull TabberPlayer player : getOnlinePlayers()) {
+            player.unregisterScoreboard();
+        }
         getCommandManager().unregisterAllCommands();
         getFunctionManager().unload();
+        OrderData.CEL_COMPILER.invalidate();
+        OrderData.CEL_RUNTIME.invalidate();
+        getOrderTypeRegistry().clear();
+        Logger.getCurrentLogger().info("Disabled Tabber v" + Constants.VERSION);
     }
 }

@@ -26,14 +26,22 @@ public interface Scoreboard {
      * Register a team to this scoreboard.
      * @param builder the builder of the team
      */
-    void registerTeam(@NotNull Team.Builder builder);
+    @NotNull Team registerTeam(@NotNull Team.Builder builder);
+
+    /**
+     * Register a team to this scoreboard.
+     * @param name the name of the team
+     */
+    default @NotNull Team registerTeam(@NotNull String name) {
+        return registerTeam(name, team -> {});
+    }
 
     /**
      * Register a team to this scoreboard.
      * @param name the name of the team
      * @param action the action to configure the team
      */
-    void registerTeam(@NotNull String name, @NotNull Consumer<Team.Builder> action);
+    @NotNull Team registerTeam(@NotNull String name, @NotNull Consumer<Team.Builder> action);
 
     /**
      * Create a new team builder.
@@ -44,6 +52,11 @@ public interface Scoreboard {
     /**
      * Unregister a team from this scoreboard.
      * @param name the name of the team
+     * @throws IllegalStateException if the team is not found
      */
-    void unregisterTeam(@NotNull String name);
+    void unregisterTeam(@NotNull String name) throws IllegalStateException;
+
+    default @NotNull Optional<@NotNull Team> findTeam(@NotNull String entry) {
+        return getTeams().stream().filter(team -> team.getEntries().contains(entry)).findAny();
+    }
 }

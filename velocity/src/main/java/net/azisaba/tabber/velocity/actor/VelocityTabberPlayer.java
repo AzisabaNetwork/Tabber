@@ -11,9 +11,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public record VelocityTabberPlayer(@NotNull Player player) implements TabberPlayer, ForwardingAudience.Single {
+    private static final Set<UUID> SPY_PLAYERS = ConcurrentHashMap.newKeySet();
+
     public VelocityTabberPlayer(@NotNull Player player) {
         this.player = Objects.requireNonNull(player);
     }
@@ -41,6 +45,20 @@ public record VelocityTabberPlayer(@NotNull Player player) implements TabberPlay
     @Override
     public @NotNull Scoreboard getScoreboard() {
         return new VelocityScoreboard(this);
+    }
+
+    @Override
+    public boolean isSpy() {
+        return SPY_PLAYERS.contains(getUniqueId());
+    }
+
+    @Override
+    public void setSpy(boolean spy) {
+        if (spy) {
+            SPY_PLAYERS.add(getUniqueId());
+        } else {
+            SPY_PLAYERS.remove(getUniqueId());
+        }
     }
 
     public @NotNull TabPlayer getTabPlayer() {

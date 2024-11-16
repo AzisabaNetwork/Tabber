@@ -18,4 +18,9 @@ public interface TabberPlatform {
      * Cancels all running tasks.
      */
     void cancelTasks();
+
+    /**
+     * Schedules a repeating task to update the order of the players.
+     */
+    void scheduleOrderUpdateTask();
 }

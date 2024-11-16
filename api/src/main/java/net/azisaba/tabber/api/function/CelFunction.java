@@ -4,6 +4,7 @@ import dev.cel.common.CelFunctionDecl;
 import dev.cel.common.CelOverloadDecl;
 import dev.cel.common.types.CelType;
 import dev.cel.runtime.CelRuntime;
+import net.azisaba.tabber.api.Logger;
 import net.azisaba.tabber.api.TabberProvider;
 import net.azisaba.tabber.api.actor.TabberPlayer;
 import net.azisaba.tabber.message.Player;
@@ -52,7 +53,18 @@ public final class CelFunction {
                         TabberPlayer tabberPlayer = TabberProvider.get().getPlayer(UUID.fromString(player.getUuid())).orElseThrow();
                         return TabberProvider.get().getPlaceholderManager().getPlaceholderByIdentifier(identifier)
                                 .map(placeholder -> placeholder.replace(identifier, tabberPlayer))
-                                .map(Integer::parseInt)
+                                .map(value -> {
+                                    try {
+                                        return Integer.parseInt(value);
+                                    } catch (NumberFormatException e) {
+                                        if (TabberProvider.get().getConfig().isDebug()) {
+                                            Logger.getCurrentLogger().warn("Failed to parse int: " + value, e);
+                                        } else {
+                                            Logger.getCurrentLogger().warn("Failed to parse int: " + value);
+                                        }
+                                        return 0;
+                                    }
+                                })
                                 .orElse(0);
                     }
             )

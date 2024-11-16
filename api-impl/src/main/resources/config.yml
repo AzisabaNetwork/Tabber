@@ -5,11 +5,14 @@ server-groups:
     - server1
     - server2
 
+spy-servers:
+  - spyserver1
+  - spyserver2
+
 isolate-unlisted-servers: false
 
 order-update-interval: 5000
 
-order-viewer-server-first: true
-
 order:
-  -
+  - type: ASC
+    expression: "player.username"

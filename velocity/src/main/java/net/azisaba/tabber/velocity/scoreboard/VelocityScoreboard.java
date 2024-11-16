@@ -33,16 +33,16 @@ public class VelocityScoreboard implements Scoreboard {
     }
 
     @Override
-    public void registerTeam(Team.@NotNull Builder builder) {
+    public @NotNull Team registerTeam(Team.@NotNull Builder builder) {
         VelocityTeam.BuilderImpl builderImpl = (VelocityTeam.BuilderImpl) builder;
-        scoreboard.registerTeam(builderImpl.builder());
+        return new VelocityTeam(scoreboard.registerTeam(builderImpl.builder()));
     }
 
     @Override
-    public void registerTeam(@NotNull String name, @NotNull java.util.function.Consumer<Team.Builder> action) {
+    public @NotNull Team registerTeam(@NotNull String name, @NotNull java.util.function.Consumer<Team.Builder> action) {
         Team.Builder builder = new VelocityTeam.BuilderImpl(scoreboard.teamBuilder(name));
         action.accept(builder);
-        registerTeam(builder);
+        return registerTeam(builder);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class VelocityScoreboard implements Scoreboard {
     }
 
     @Override
-    public void unregisterTeam(@NotNull String name) {
+    public void unregisterTeam(@NotNull String name) throws IllegalStateException {
         scoreboard.unregisterTeam(name);
     }
 }

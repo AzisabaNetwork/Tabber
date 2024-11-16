@@ -8,4 +8,5 @@ message Player {
   string username = 1;
   string uuid = 2;
   optional string server = 3;
+  optional string server_group = 4;
 }

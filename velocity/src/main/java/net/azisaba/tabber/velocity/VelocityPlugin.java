@@ -10,7 +10,6 @@ import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
-import me.neznamy.tab.shared.TAB;
 import net.azisaba.tabber.api.Constants;
 import net.azisaba.tabber.api.TabberProvider;
 import net.azisaba.tabber.velocity.actor.VelocityTabberPlayer;
@@ -18,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
+import java.util.concurrent.TimeUnit;
 
 @Plugin(
         id = "tabber",
@@ -63,9 +63,6 @@ public class VelocityPlugin {
 
     @Subscribe
     public void onProxyInitialization(@NotNull ProxyInitializeEvent e) {
-        if (TAB.getInstance().getConfiguration().getConfig().getTeams() != null) {
-            throw new RuntimeException("Tabber is not compatible with the scoreboard-teams feature of TAB. Please disable it in the plugins/tab/config.yml.");
-        }
         TabberProvider.get().enable();
         proxyServer.getCommandManager().register(proxyServer.getCommandManager().metaBuilder("tabber").plugin(this).build(), command);
     }
@@ -77,12 +74,14 @@ public class VelocityPlugin {
 
     @Subscribe
     public void onPostLogin(@NotNull PostLoginEvent e) {
-        TabberProvider.get().getPlatform().onJoin(new VelocityTabberPlayer(e.getPlayer()));
+        //TabberProvider.get().getPlatform().onJoin(new VelocityTabberPlayer(e.getPlayer()));
     }
 
     @SuppressWarnings("UnstableApiUsage")
     @Subscribe
     public void onServerPostConnect(@NotNull ServerPostConnectEvent e) {
-        TabberProvider.get().getPlatform().onJoin(new VelocityTabberPlayer(e.getPlayer()));
+        proxyServer.getScheduler().buildTask(this, () -> TabberProvider.get().getPlatform().onJoin(new VelocityTabberPlayer(e.getPlayer())))
+                .delay(1, TimeUnit.SECONDS)
+                .schedule();
     }
 }

@@ -1,18 +1,20 @@
 package net.azisaba.tabber.velocity;
 
 import net.azisaba.tabber.api.Logger;
-import net.azisaba.tabber.api.TabberConfig;
+import net.azisaba.tabber.api.config.TabberConfig;
 import net.azisaba.tabber.api.TabberPlatform;
 import net.azisaba.tabber.api.actor.TabberPlayer;
 import net.azisaba.tabber.api.impl.AbstractTabber;
-import net.azisaba.tabber.api.impl.TabberConfigImpl;
+import net.azisaba.tabber.api.impl.config.TabberConfigImpl;
 import net.azisaba.tabber.api.placeholder.PlaceholderManager;
 import net.azisaba.tabber.velocity.actor.VelocityTabberPlayer;
 import net.azisaba.tabber.velocity.command.VelocityCommandManager;
 import net.azisaba.tabber.velocity.placeholder.PlaceholderManagerImpl;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,12 +24,11 @@ public class VelocityTabber extends AbstractTabber {
     private final @NotNull VelocityPlatform platform = new VelocityPlatform(this);
     private final @NotNull VelocityCommandManager commandManager = new VelocityCommandManager(this);
     private final @NotNull PlaceholderManager placeholderManager = new PlaceholderManagerImpl();
-    private @NotNull TabberConfig config;
+    private @Nullable TabberConfig config;
 
     public VelocityTabber(@NotNull VelocityPlugin plugin) {
         this.plugin = plugin;
         this.logger = Logger.createByProxy(plugin.getLogger());
-        this.config = TabberConfigImpl.createFromYaml(plugin.getDataDirectory().resolve("config.yml"));
     }
 
     public @NotNull VelocityPlugin getPlugin() {
@@ -46,7 +47,7 @@ public class VelocityTabber extends AbstractTabber {
 
     @Override
     public @NotNull TabberConfig getConfig() {
-        return config;
+        return Objects.requireNonNull(config, "config is null");
     }
 
     @Override
