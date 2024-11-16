@@ -39,12 +39,15 @@ public class EvalCommand implements Command {
         String expression = String.join(" ", args).substring(args[0].length() + 1);
         sender.sendMessage(Component.text("> " + expression, NamedTextColor.GRAY));
         try {
-            long start = System.currentTimeMillis();
+            long start = System.nanoTime();
             CelAbstractSyntaxTree ast = OrderData.CEL_COMPILER.get().compile(expression).getAst();
             CelRuntime.Program program = OrderData.CEL_RUNTIME.get().createProgram(ast);
+            long executionStart = System.nanoTime();
             Object result = program.eval(Map.of("player", player.toProtobuf()));
-            long end = System.currentTimeMillis();
-            sender.sendMessage(Component.text("Time: " + (end - start) + " ms", NamedTextColor.GRAY));
+            long end = System.nanoTime();
+            double timeInMillis = Math.round((end - start) / 1000000.0 * 1000.0) / 1000.0;
+            double executionTimeInMillis = Math.round((end - executionStart) / 1000000.0 * 1000.0) / 1000.0;
+            sender.sendMessage(Component.text("Time: " + timeInMillis + " ms (execution took " + executionTimeInMillis + " ms)", NamedTextColor.GRAY));
             sender.sendMessage(Component.text("Result: ", NamedTextColor.GREEN)
                     .append(Component.text(String.valueOf(result), NamedTextColor.WHITE)));
         } catch (Exception e) {
