@@ -1,5 +1,6 @@
 package net.azisaba.tabber.api.config;
 
+import dev.cel.runtime.CelRuntime;
 import net.azisaba.tabber.api.order.OrderData;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,6 +32,12 @@ public interface TabberConfig {
      * @return true if the plugin should isolate unlisted servers; false otherwise
      */
     boolean isolateUnlistedServers();
+
+    /**
+     * Returns the condition of disabling the sorting of the tab list. Viewer and Player are available, but they are the same.
+     * @return compiled expression
+     */
+    CelRuntime.@NotNull Program getDisableOrderExpression();
 
     /**
      * Returns the update interval of the tab list order, in milliseconds.

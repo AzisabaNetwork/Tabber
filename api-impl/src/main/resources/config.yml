@@ -11,6 +11,8 @@ spy-servers:
 
 isolate-unlisted-servers: false
 
+disable-order-expression: 'player.server == "disabledserver3"'
+
 order-update-interval: 5000
 
 order:

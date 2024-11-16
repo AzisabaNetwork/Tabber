@@ -1,5 +1,6 @@
 package net.azisaba.tabber.api.actor;
 
+import dev.cel.runtime.CelEvaluationException;
 import net.azisaba.tabber.api.Logger;
 import net.azisaba.tabber.api.TabberProvider;
 import net.azisaba.tabber.api.order.OrderData;
@@ -57,6 +58,14 @@ public interface TabberPlayer extends Audience {
      * Updates the order of the tab list seen by this player.
      */
     default void updateOrder() {
+        try {
+            if (Boolean.getBoolean(String.valueOf(TabberProvider.get().getConfig().getDisableOrderExpression().eval(Map.of("viewer", toProtobuf(), "player", toProtobuf()))))) {
+                unregisterScoreboard();
+                return;
+            }
+        } catch (CelEvaluationException e) {
+            Logger.getCurrentLogger().warn("Failed to evaluate the expression: " + TabberProvider.get().getConfig().getDisableOrderExpression(), e);
+        }
         Scoreboard scoreboard = getScoreboard();
         if (isSpy() || TabberProvider.get().getConfig().getSpyServers().contains(getServerName().orElse(null))) {
             for (@NotNull TabberPlayer player : TabberProvider.get().getOnlinePlayers()) {

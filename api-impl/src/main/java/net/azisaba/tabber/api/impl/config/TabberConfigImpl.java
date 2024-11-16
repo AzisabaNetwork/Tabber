@@ -1,5 +1,9 @@
 package net.azisaba.tabber.api.impl.config;
 
+import dev.cel.common.CelAbstractSyntaxTree;
+import dev.cel.common.CelValidationException;
+import dev.cel.runtime.CelEvaluationException;
+import dev.cel.runtime.CelRuntime;
 import net.azisaba.tabber.api.Logger;
 import net.azisaba.tabber.api.TabberProvider;
 import net.azisaba.tabber.api.config.TabberConfig;
@@ -21,11 +25,26 @@ import java.util.stream.Collectors;
 
 public class TabberConfigImpl implements TabberConfig {
     private final @NotNull ConfigurationNode root;
+    private final CelRuntime.@NotNull Program disableOrderExpression;
     private final @NotNull List<@NotNull OrderData> order;
 
     private TabberConfigImpl(@NotNull ConfigurationNode root) {
         this.root = Objects.requireNonNull(root);
         Registry<String, OrderType> orderTypeRegistry = TabberProvider.get().getOrderTypeRegistry();
+        CelRuntime.@NotNull Program disableOrderExpression1;
+        try {
+            String expression = Objects.requireNonNull(root.node("disable-order-expression").getString(), "disable-order-expression");
+            CelAbstractSyntaxTree ast = OrderData.CEL_COMPILER.get().compile(expression).getAst();
+            disableOrderExpression1 = OrderData.CEL_RUNTIME.get().createProgram(ast);
+        } catch (Exception e) {
+            Logger.getCurrentLogger().warn("Failed to compile disable-order-expression: {}", root.node("disable-order-expression"), e);
+            try {
+                disableOrderExpression1 = OrderData.CEL_RUNTIME.get().createProgram(OrderData.CEL_COMPILER.get().compile("false").getAst());
+            } catch (CelEvaluationException | CelValidationException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        this.disableOrderExpression = disableOrderExpression1;
         this.order = root.node("order")
                 .childrenList()
                 .stream()
@@ -75,6 +94,11 @@ public class TabberConfigImpl implements TabberConfig {
     @Override
     public boolean isolateUnlistedServers() {
         return root.node("isolate-unlisted-servers").getBoolean(false);
+    }
+
+    @Override
+    public CelRuntime.@NotNull Program getDisableOrderExpression() {
+        return disableOrderExpression;
     }
 
     @Override
