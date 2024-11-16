@@ -124,6 +124,7 @@ public interface TabberPlayer extends Audience {
                 .setUsername(getUsername())
                 .setUuid(getUniqueId().toString());
         getServerName().ifPresent(builder::setServer);
+        getServerGroup().ifPresent(builder::setServerGroup);
         return builder.build();
     }
 
