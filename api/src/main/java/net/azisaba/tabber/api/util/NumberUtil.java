@@ -12,7 +12,6 @@ public class NumberUtil {
 
     public static @NotNull String compressNumber(double number) {
         int wholePart = (int) number;
-        char decimalChar = getDecimalChar(number, wholePart);
 
         StringBuilder sb = new StringBuilder();
         appendWholePart(sb, wholePart);
@@ -21,7 +20,20 @@ public class NumberUtil {
             sb.insert(0, '\u0000');
         }
 
-        sb.append(decimalChar);
+        char decimalChar = getDecimalChar(number, wholePart);
+        if (decimalChar != '\u0000') {
+            sb.append(decimalChar);
+        }
+        return sb.toString();
+    }
+
+    public static @NotNull String compressNumberReverse(int number) {
+        return compressNumber(1.073741823E9 - number);
+    }
+
+    public static @NotNull String compressNumber(int number) {
+        StringBuilder sb = new StringBuilder();
+        appendWholePart(sb, number);
         return sb.toString();
     }
 

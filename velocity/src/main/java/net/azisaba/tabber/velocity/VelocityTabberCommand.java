@@ -55,4 +55,14 @@ public class VelocityTabberCommand implements RawCommand {
                     .orElse(List.of());
         }
     }
+
+    @Override
+    public boolean hasPermission(Invocation invocation) {
+        String[] args = invocation.arguments().split(" ", -1);
+        if (args.length == 0) {
+            return invocation.source().hasPermission("tabber.command");
+        }
+        return invocation.source().hasPermission("tabber.command." + args[0])
+                && invocation.source().hasPermission("tabber.command");
+    }
 }

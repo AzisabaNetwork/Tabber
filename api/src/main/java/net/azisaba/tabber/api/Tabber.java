@@ -101,9 +101,15 @@ public interface Tabber {
         getOrderTypeRegistry().register("DESCENDING", OrderType.DESCENDING);
         getOrderTypeRegistry().register("LOW_TO_HIGH", OrderType.LOW_TO_HIGH);
         getOrderTypeRegistry().register("HIGH_TO_LOW", OrderType.HIGH_TO_LOW);
+        getOrderTypeRegistry().register("LOW_TO_HIGH_INT", OrderType.LOW_TO_HIGH_INT);
+        getOrderTypeRegistry().register("HIGH_TO_LOW_INT", OrderType.HIGH_TO_LOW_INT);
         EventBus.INSTANCE.callEvent(new TabberPreLoadEvent());
         getFunctionManager().load();
-        reloadConfig();
+        try {
+            reloadConfig();
+        } catch (Exception e) {
+            Logger.getCurrentLogger().error("Failed to load the configuration", e);
+        }
         getCommandManager().registerCommand(new VersionCommand());
         getCommandManager().registerCommand(new HelpCommand());
         getCommandManager().registerCommand(new ReloadCommand());

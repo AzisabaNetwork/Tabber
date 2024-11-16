@@ -61,6 +61,42 @@ public final class OrderType {
                 return NumberUtil.compressNumberReverse(number);
             }
     );
+    public static final @NotNull OrderType LOW_TO_HIGH_INT = new OrderType(
+            "HIGH_TO_LOW_INT",
+            (viewer, player, expression) -> {
+                String value = String.valueOf(expression.eval(Map.of("viewer", viewer.toProtobuf(), "player", player.toProtobuf())));
+                int number;
+                try {
+                    number = Integer.parseInt(value);
+                } catch (NumberFormatException e) {
+                    if (TabberProvider.get().getConfig().isDebug()) {
+                        Logger.getCurrentLogger().warn("Failed to parse number (LOW_TO_HIGH): " + value, e);
+                    } else {
+                        Logger.getCurrentLogger().warn("Failed to parse number (LOW_TO_HIGH): " + value);
+                    }
+                    number = 0;
+                }
+                return NumberUtil.compressNumber(number);
+            }
+    );
+    public static final @NotNull OrderType HIGH_TO_LOW_INT = new OrderType(
+            "HIGH_TO_LOW_INT",
+            (viewer, player, expression) -> {
+                String value = String.valueOf(expression.eval(Map.of("viewer", viewer.toProtobuf(), "player", player.toProtobuf())));
+                int number;
+                try {
+                    number = Integer.parseInt(value);
+                } catch (NumberFormatException e) {
+                    if (TabberProvider.get().getConfig().isDebug()) {
+                        Logger.getCurrentLogger().warn("Failed to parse number (HIGH_TO_LOW): " + value, e);
+                    } else {
+                        Logger.getCurrentLogger().warn("Failed to parse number (HIGH_TO_LOW): " + value);
+                    }
+                    number = 0;
+                }
+                return NumberUtil.compressNumberReverse(number);
+            }
+    );
 
     private final @NotNull String name;
     private final @NotNull OrderEvaluator evaluator;

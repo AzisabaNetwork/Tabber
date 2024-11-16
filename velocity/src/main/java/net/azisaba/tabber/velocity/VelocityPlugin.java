@@ -63,8 +63,8 @@ public class VelocityPlugin {
 
     @Subscribe
     public void onProxyInitialization(@NotNull ProxyInitializeEvent e) {
-        TabberProvider.get().enable();
         proxyServer.getCommandManager().register(proxyServer.getCommandManager().metaBuilder("tabber").plugin(this).build(), command);
+        TabberProvider.get().enable();
     }
 
     @Subscribe
