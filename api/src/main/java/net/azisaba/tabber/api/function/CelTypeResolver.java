@@ -2,10 +2,13 @@ package net.azisaba.tabber.api.function;
 
 import dev.cel.common.types.CelType;
 import dev.cel.common.types.CelTypes;
+import dev.cel.common.types.ListType;
 import dev.cel.common.types.SimpleType;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class CelTypeResolver {
@@ -24,7 +27,9 @@ public final class CelTypeResolver {
             Map.entry(Void.class, SimpleType.NULL_TYPE),
             Map.entry(void.class, SimpleType.NULL_TYPE),
             Map.entry(Object.class, SimpleType.ANY),
-            Map.entry(byte[].class, SimpleType.BYTES)
+            Map.entry(byte[].class, SimpleType.BYTES),
+            Map.entry(List.class, ListType.create(SimpleType.DYN)),
+            Map.entry(Collection.class, ListType.create(SimpleType.DYN))
     ));
 
     public static @NotNull CelType resolve(@NotNull Class<?> clazz) {

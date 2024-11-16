@@ -5,6 +5,7 @@ import dev.cel.common.CelValidationException;
 import dev.cel.common.types.CelTypes;
 import dev.cel.compiler.CelCompiler;
 import dev.cel.compiler.CelCompilerFactory;
+import dev.cel.extensions.CelExtensions;
 import dev.cel.parser.CelStandardMacro;
 import dev.cel.runtime.CelEvaluationException;
 import dev.cel.runtime.CelRuntime;
@@ -26,6 +27,8 @@ public final class OrderData {
             new LazyValue<>(() ->
                     CelCompilerFactory.standardCelCompilerBuilder()
                             .setStandardMacros(CelStandardMacro.values())
+                            .addLibraries(CelExtensions.strings())
+                            .addLibraries(CelExtensions.lists())
                             .addMessageTypes(PlayerMessage.getDescriptor().getMessageTypes())
                             .addFunctionDeclarations(
                                     TabberProvider.get()
@@ -41,6 +44,8 @@ public final class OrderData {
     public static final @NotNull LazyValue<CelRuntime> CEL_RUNTIME =
             new LazyValue<>(() ->
                     CelRuntimeFactory.standardCelRuntimeBuilder()
+                            .addLibraries(CelExtensions.strings())
+                            .addLibraries(CelExtensions.lists())
                             .addFunctionBindings(
                                     TabberProvider.get()
                                             .getFunctionManager()

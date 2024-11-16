@@ -32,6 +32,7 @@ public interface FunctionManager {
         registerFunction(CelFunction.STRING_REVERSE);
         registerFunction(CelFunction.PLAYER_GET_PLACEHOLDER);
         registerFunction(CelFunction.PLAYER_GET_PLACEHOLDER_AS_INT);
+        registerFunction(CelFunction.LIST_INDEX_OF);
     }
 
     /**

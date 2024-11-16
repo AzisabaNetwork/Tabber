@@ -69,6 +69,16 @@ public final class CelFunction {
                     }
             )
     );
+    public static final CelFunction LIST_INDEX_OF = new CelFunction(
+            "indexOf",
+            OverloadDef.createMemberOverload(
+                    "List_indexOf_object",
+                    int.class,
+                    List.class,
+                    Object.class,
+                    List::indexOf
+            )
+    );
 
     private final @NotNull CelFunctionDecl function;
     private final @NotNull List<CelRuntime.@NotNull CelFunctionBinding> binding;
