@@ -59,7 +59,7 @@ public interface TabberPlayer extends Audience {
      */
     default void updateOrder() {
         try {
-            if (Boolean.getBoolean(String.valueOf(TabberProvider.get().getConfig().getDisableOrderExpression().eval(Map.of("viewer", toProtobuf(), "player", toProtobuf()))))) {
+            if (Boolean.parseBoolean(String.valueOf(TabberProvider.get().getConfig().getDisableOrderExpression().eval(Map.of("viewer", toProtobuf(), "player", toProtobuf()))))) {
                 unregisterScoreboard();
                 return;
             }
