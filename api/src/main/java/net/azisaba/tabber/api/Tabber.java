@@ -116,6 +116,7 @@ public interface Tabber {
         getCommandManager().registerCommand(new DebugCommand());
         getCommandManager().registerCommand(new EvalCommand());
         getCommandManager().registerCommand(new UnloadCommand());
+        getCommandManager().registerCommand(new ParseCommand());
         for (@NotNull TabberPlayer player : getOnlinePlayers()) {
             try {
                 getPlatform().onJoin(player);
