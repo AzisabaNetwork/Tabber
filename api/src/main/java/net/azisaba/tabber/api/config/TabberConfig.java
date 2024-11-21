@@ -2,6 +2,7 @@ package net.azisaba.tabber.api.config;
 
 import dev.cel.runtime.CelRuntime;
 import net.azisaba.tabber.api.order.OrderData;
+import net.azisaba.tabber.api.scoreboard.CollisionRule;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -50,4 +51,6 @@ public interface TabberConfig {
      * @return the order
      */
     @NotNull List<@NotNull OrderData> getOrder();
+
+    @NotNull CollisionRule getCollisionRule();
 }

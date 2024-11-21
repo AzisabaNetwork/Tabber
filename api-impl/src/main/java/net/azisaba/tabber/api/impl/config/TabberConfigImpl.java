@@ -10,6 +10,7 @@ import net.azisaba.tabber.api.config.TabberConfig;
 import net.azisaba.tabber.api.core.Registry;
 import net.azisaba.tabber.api.order.OrderData;
 import net.azisaba.tabber.api.order.OrderType;
+import net.azisaba.tabber.api.scoreboard.CollisionRule;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -27,6 +28,7 @@ public class TabberConfigImpl implements TabberConfig {
     private final @NotNull ConfigurationNode root;
     private final CelRuntime.@NotNull Program disableOrderExpression;
     private final @NotNull List<@NotNull OrderData> order;
+    private final CollisionRule collisionRule;
 
     private TabberConfigImpl(@NotNull ConfigurationNode root) {
         this.root = Objects.requireNonNull(root);
@@ -61,6 +63,7 @@ public class TabberConfigImpl implements TabberConfig {
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+        this.collisionRule = CollisionRule.getByName(root.node("collision-rule").getString("never"));
     }
 
     public @NotNull ConfigurationNode getRoot() {
@@ -109,6 +112,11 @@ public class TabberConfigImpl implements TabberConfig {
     @Override
     public @NotNull List<@NotNull OrderData> getOrder() {
         return order;
+    }
+
+    @Override
+    public @NotNull CollisionRule getCollisionRule() {
+        return collisionRule;
     }
 
     /* static methods */

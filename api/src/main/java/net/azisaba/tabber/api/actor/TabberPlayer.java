@@ -4,6 +4,7 @@ import dev.cel.runtime.CelEvaluationException;
 import net.azisaba.tabber.api.Logger;
 import net.azisaba.tabber.api.TabberProvider;
 import net.azisaba.tabber.api.order.OrderData;
+import net.azisaba.tabber.api.scoreboard.CollisionRule;
 import net.azisaba.tabber.api.scoreboard.Scoreboard;
 import net.azisaba.tabber.api.scoreboard.Team;
 import net.azisaba.tabber.api.util.StringUtil;
@@ -158,7 +159,8 @@ public interface TabberPlayer extends Audience {
         if (team == null || !team.getName().equals(teamName)) {
             if (team != null) viewerScoreboard.unregisterTeam(team.getName());
             Team existingTeam = viewerScoreboard.getTeam(teamName).orElse(null);
-            Objects.requireNonNullElseGet(existingTeam, () -> viewerScoreboard.registerTeam(teamName))
+            CollisionRule collisionRule = TabberProvider.get().getConfig().getCollisionRule();
+            Objects.requireNonNullElseGet(existingTeam, () -> viewerScoreboard.registerTeam(teamName, t -> t.collisionRule(collisionRule)))
                     .addEntry(player.getUsername());
         }
     }

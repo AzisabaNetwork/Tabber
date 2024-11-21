@@ -69,5 +69,9 @@ public interface Team {
         @NotNull Builder prefix(@NotNull Component prefix);
 
         @NotNull Builder suffix(@NotNull Component suffix);
+
+        @NotNull Builder collisionRule(@NotNull CollisionRule rule);
+
+        @NotNull Builder collisionRule(@NotNull String ruleName);
     }
 }

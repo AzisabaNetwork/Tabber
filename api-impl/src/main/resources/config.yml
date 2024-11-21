@@ -18,3 +18,5 @@ order-update-interval: 5000
 order:
   - type: ASC
     expression: "player.username"
+
+collision-rule: never
