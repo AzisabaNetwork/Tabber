@@ -13,6 +13,7 @@ import net.azisaba.tabber.api.function.FunctionManager;
 import net.azisaba.tabber.api.order.OrderData;
 import net.azisaba.tabber.api.order.OrderType;
 import net.azisaba.tabber.api.placeholder.PlaceholderManager;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -90,6 +91,7 @@ public interface Tabber {
     /**
      * Enables the features of the plugin.
      */
+    @MustBeInvokedByOverriders
     default void enable() {
         Logger.getCurrentLogger().info("Enabling Tabber...");
         Logger.getCurrentLogger().info("TAB's scoreboard-teams feature is not compatible with Tabber. If you're using TAB, please disable the scoreboard-teams feature.");
@@ -132,6 +134,7 @@ public interface Tabber {
     /**
      * Disables the features of the plugin.
      */
+    @MustBeInvokedByOverriders
     default void disable() {
         Logger.getCurrentLogger().info("Disabling Tabber...");
         EventBus.INSTANCE.callEvent(new TabberUnloadEvent());

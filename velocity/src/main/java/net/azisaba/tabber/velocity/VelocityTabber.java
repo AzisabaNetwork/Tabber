@@ -23,7 +23,7 @@ public class VelocityTabber extends AbstractTabber {
     private final @NotNull Logger logger;
     private final @NotNull VelocityPlatform platform = new VelocityPlatform(this);
     private final @NotNull VelocityCommandManager commandManager = new VelocityCommandManager(this);
-    private final @NotNull PlaceholderManager placeholderManager = new PlaceholderManagerImpl();
+    private final @NotNull PlaceholderManagerImpl placeholderManager = new PlaceholderManagerImpl();
     private @Nullable TabberConfig config;
 
     public VelocityTabber(@NotNull VelocityPlugin plugin) {
@@ -78,5 +78,11 @@ public class VelocityTabber extends AbstractTabber {
     @Override
     public @NotNull List<@NotNull TabberPlayer> getOnlinePlayers() {
         return plugin.getProxyServer().getAllPlayers().stream().map(player -> (TabberPlayer) new VelocityTabberPlayer(player)).toList();
+    }
+
+    @Override
+    public void disable() {
+        placeholderManager.tabPlaceholderManager.invalidate();
+        super.disable();
     }
 }

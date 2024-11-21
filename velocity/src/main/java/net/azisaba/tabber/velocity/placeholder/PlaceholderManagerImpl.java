@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class PlaceholderManagerImpl implements PlaceholderManager {
-    private final LazyValue<me.neznamy.tab.shared.features.PlaceholderManagerImpl> tabPlaceholderManager =
+    public final LazyValue<me.neznamy.tab.shared.features.PlaceholderManagerImpl> tabPlaceholderManager =
             new LazyValue<>(() -> TAB.getInstance().getPlaceholderManager());
 
     /**
