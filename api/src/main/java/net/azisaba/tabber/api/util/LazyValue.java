@@ -19,15 +19,17 @@ public class LazyValue<T> {
     }
 
     public @NotNull T get() {
-        if (value == null) {
+        T current = value;
+        if (current == null) {
             synchronized (lock) {
-                if (value == null) {
-                    value = loader.load();
-                    Objects.requireNonNull(value, "loader returned null");
+                current = value;
+                if (current == null) {
+                    current = Objects.requireNonNull(loader.load(), "loader returned null");
+                    value = current;
                 }
             }
         }
-        return value;
+        return current;
     }
 
     public void invalidate() {

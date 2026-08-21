@@ -35,7 +35,10 @@ public final class CelFunction {
                     Player.class,
                     String.class,
                     (player, identifier) -> {
-                        TabberPlayer tabberPlayer = TabberProvider.get().getPlayer(UUID.fromString(player.getUuid())).orElseThrow();
+                        TabberPlayer tabberPlayer = TabberProvider.get().getPlayer(UUID.fromString(player.getUuid())).orElse(null);
+                        if (tabberPlayer == null) {
+                            return identifier;
+                        }
                         return TabberProvider.get().getPlaceholderManager().getPlaceholderByIdentifier(identifier)
                                 .map(placeholder -> placeholder.replace(identifier, tabberPlayer))
                                 .orElse(identifier);
@@ -50,7 +53,10 @@ public final class CelFunction {
                     Player.class,
                     String.class,
                     (player, identifier) -> {
-                        TabberPlayer tabberPlayer = TabberProvider.get().getPlayer(UUID.fromString(player.getUuid())).orElseThrow();
+                        TabberPlayer tabberPlayer = TabberProvider.get().getPlayer(UUID.fromString(player.getUuid())).orElse(null);
+                        if (tabberPlayer == null) {
+                            return 0;
+                        }
                         return TabberProvider.get().getPlaceholderManager().getPlaceholderByIdentifier(identifier)
                                 .map(placeholder -> placeholder.replace(identifier, tabberPlayer))
                                 .map(value -> {

@@ -80,7 +80,12 @@ public class VelocityPlugin {
     @SuppressWarnings("UnstableApiUsage")
     @Subscribe
     public void onServerPostConnect(@NotNull ServerPostConnectEvent e) {
-        proxyServer.getScheduler().buildTask(this, () -> TabberProvider.get().getPlatform().onJoin(new VelocityTabberPlayer(e.getPlayer())))
+        proxyServer.getScheduler().buildTask(this, () -> {
+                    VelocityTabber tabber = (VelocityTabber) TabberProvider.get();
+                    if (tabber.isEnabled()) {
+                        tabber.getPlatform().onJoin(new VelocityTabberPlayer(e.getPlayer()));
+                    }
+                })
                 .delay(1, TimeUnit.SECONDS)
                 .schedule();
     }

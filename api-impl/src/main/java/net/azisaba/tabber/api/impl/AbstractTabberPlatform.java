@@ -1,5 +1,6 @@
 package net.azisaba.tabber.api.impl;
 
+import net.azisaba.tabber.api.Logger;
 import net.azisaba.tabber.api.TabberPlatform;
 import net.azisaba.tabber.api.TabberProvider;
 import net.azisaba.tabber.api.actor.TabberPlayer;
@@ -10,7 +11,11 @@ public abstract class AbstractTabberPlatform implements TabberPlatform {
     public void onJoin(@NotNull TabberPlayer player) {
         for (@NotNull TabberPlayer viewer : TabberProvider.get().getOnlinePlayers()) {
             // reorder the player list
-            viewer.updateOrder();
+            try {
+                viewer.updateOrder();
+            } catch (RuntimeException e) {
+                Logger.getCurrentLogger().error("Failed to update tab order for player " + viewer.getUsername(), e);
+            }
         }
     }
 }

@@ -3,16 +3,21 @@ package net.azisaba.tabber.velocity.placeholder;
 import me.neznamy.tab.shared.TAB;
 import net.azisaba.tabber.api.placeholder.Placeholder;
 import net.azisaba.tabber.api.placeholder.PlaceholderManager;
-import net.azisaba.tabber.api.util.LazyValue;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class PlaceholderManagerImpl implements PlaceholderManager {
-    public final LazyValue<me.neznamy.tab.shared.features.PlaceholderManagerImpl> tabPlaceholderManager =
-            new LazyValue<>(() -> TAB.getInstance().getPlaceholderManager());
+    private static @NotNull Optional<me.neznamy.tab.shared.features.PlaceholderManagerImpl> getTabPlaceholderManager() {
+        TAB tab = TAB.getInstance();
+        if (tab.isPluginDisabled()) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(tab.getPlaceholderManager());
+    }
 
     /**
      * Wraps a TAB placeholder into a Tabber placeholder.
@@ -29,16 +34,20 @@ public class PlaceholderManagerImpl implements PlaceholderManager {
 
     @Override
     public @NotNull List<@NotNull Placeholder> getKnownPlaceholders() {
-        return tabPlaceholderManager.get()
-                .getAllPlaceholders()
-                .stream()
-                .map(PlaceholderManagerImpl::wrap)
-                .toList();
+        return getTabPlaceholderManager()
+                .map(manager -> manager.getAllPlaceholders()
+                        .stream()
+                        .map(PlaceholderManagerImpl::wrap)
+                        .filter(Objects::nonNull)
+                        .toList())
+                .orElseGet(List::of);
     }
 
     @Override
     public @NotNull Optional<@NotNull Placeholder> getPlaceholderByIdentifier(@NotNull String identifier) {
-        return Optional.ofNullable(wrap(tabPlaceholderManager.get().getPlaceholderRaw(identifier)));
+        return getTabPlaceholderManager()
+                .map(manager -> manager.getPlaceholderRaw(identifier))
+                .map(PlaceholderManagerImpl::wrap);
     }
 
     @Override

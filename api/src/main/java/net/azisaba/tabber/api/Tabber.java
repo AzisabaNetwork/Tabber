@@ -111,6 +111,9 @@ public interface Tabber {
             reloadConfig();
         } catch (Exception e) {
             Logger.getCurrentLogger().error("Failed to load the configuration", e);
+            getFunctionManager().unload();
+            getOrderTypeRegistry().clear();
+            throw new IllegalStateException("Cannot enable Tabber because its configuration could not be loaded", e);
         }
         getCommandManager().registerCommand(new VersionCommand());
         getCommandManager().registerCommand(new HelpCommand());

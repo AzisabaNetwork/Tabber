@@ -5,7 +5,7 @@ dependencies {
     compileOnly("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
     annotationProcessor("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
     compileOnly("net.william278:velocityscoreboardapi:1.0.5")
-    compileOnly(files("libs/TAB.v5.0.1.jar"))
+    compileOnly(files("libs/TAB.v5.0.7.jar"))
 }
 
 tasks {
