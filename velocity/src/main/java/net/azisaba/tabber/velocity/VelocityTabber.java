@@ -1,5 +1,6 @@
 package net.azisaba.tabber.velocity;
 
+import me.neznamy.tab.shared.TAB;
 import net.azisaba.tabber.api.Logger;
 import net.azisaba.tabber.api.config.TabberConfig;
 import net.azisaba.tabber.api.TabberPlatform;
@@ -25,6 +26,7 @@ public class VelocityTabber extends AbstractTabber {
     private final @NotNull VelocityCommandManager commandManager = new VelocityCommandManager(this);
     private final @NotNull PlaceholderManagerImpl placeholderManager = new PlaceholderManagerImpl();
     private @Nullable TabberConfig config;
+    private volatile boolean enabled;
 
     public VelocityTabber(@NotNull VelocityPlugin plugin) {
         this.plugin = plugin;
@@ -81,8 +83,42 @@ public class VelocityTabber extends AbstractTabber {
     }
 
     @Override
-    public void disable() {
-        placeholderManager.tabPlaceholderManager.invalidate();
+    public synchronized void enable() {
+        if (enabled) {
+            return;
+        }
+        TAB tab = TAB.getInstance();
+        if (tab.isPluginDisabled() || tab.getFeatureManager() == null || tab.getPlaceholderManager() == null) {
+            throw new IllegalStateException("TAB is not fully initialized. Install TAB 5.0.7 or newer and check its configuration.");
+        }
+        enabled = true;
+        try {
+            super.enable();
+        } catch (RuntimeException | Error e) {
+            enabled = false;
+            try {
+                if (commandManager.getRegisteredCommands().isEmpty()) {
+                    platform.cancelTasks();
+                } else {
+                    super.disable();
+                }
+            } catch (RuntimeException cleanupException) {
+                e.addSuppressed(cleanupException);
+            }
+            throw e;
+        }
+    }
+
+    @Override
+    public synchronized void disable() {
+        if (!enabled) {
+            return;
+        }
+        enabled = false;
         super.disable();
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 }

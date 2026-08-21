@@ -22,8 +22,15 @@ public class VelocityPlatform extends AbstractTabberPlatform {
     @Override
     public void scheduleOrderUpdateTask() {
         tabber.getPlugin().getProxyServer().getScheduler().buildTask(tabber.getPlugin(), () -> {
+            if (!tabber.isEnabled()) {
+                return;
+            }
             for (@NotNull TabberPlayer viewer : tabber.getOnlinePlayers()) {
-                viewer.updateOrder();
+                try {
+                    viewer.updateOrder();
+                } catch (RuntimeException e) {
+                    tabber.getLogger().error("Failed to update tab order for player " + viewer.getUsername(), e);
+                }
             }
         }).repeat(tabber.getConfig().getOrderUpdateInterval(), TimeUnit.MILLISECONDS).schedule();
     }
